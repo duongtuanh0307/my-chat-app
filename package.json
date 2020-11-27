@@ -2,9 +2,6 @@
   "name": "november-practice",
   "version": "0.1.0",
   "private": true,
-  "engines":{
-    "node": "14.15.0"
-  },
   "dependencies": {
     "@apollo/client": "^3.2.7",
     "@apollo/react-hooks": "^4.0.0",

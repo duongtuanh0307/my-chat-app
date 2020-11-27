@@ -16,7 +16,23 @@ firebase.initializeApp({
   appId: "1:1004140524:web:9f58f55d4f53cdc2ab72c9",
 });
 
-export const AuthContext: any = React.createContext(null);
+type AuthContextProps = {
+  authState: AuthStateTypes;
+  signOut: any;
+  logInWithEmailAndPassword: any;
+  signUpWithEmailAndPassword: any;
+};
+
+const defaultValue = {
+  authState: {
+    status: "status",
+  },
+  signOut: "signOut",
+  logInWithEmailAndPassword: "pass",
+  signUpWithEmailAndPassword: "signup",
+};
+
+export const AuthContext = React.createContext<AuthContextProps>(defaultValue);
 
 type AuthStateTypes = {
   status: string;
