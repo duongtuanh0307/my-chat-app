@@ -1,26 +1,60 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { FC } from "react";
+import { Switch, Route, Redirect, useHistory } from "react-router-dom";
+import Login from "./pages/login";
+import Dashboard from "./pages/dashboard";
+import Signup from "./pages/signup";
+import ErrorPage from "./pages/error-page";
+import { AuthContext } from "./auth";
+import { useSubscription } from "@apollo/client";
+import { ME } from "./graphql/subscriptions";
 
-function App() {
+type MeContentTypes = {
+  id: string;
+  username: string;
+  email: string;
+  about_me: string;
+  profile_image: string;
+  date_of_birth: string;
+  phone_number: string;
+};
+
+export const CurrentUserContext: any = React.createContext();
+
+const App: FC = () => {
+  const { authState } = React.useContext(AuthContext);
+  const isAuth = authState.status === "in";
+  const firebaseUserId = isAuth ? authState.user.uid : null;
+  const { data, loading } = useSubscription(ME, {
+    variables: { firebaseUserId: firebaseUserId },
+  });
+  const history = useHistory();
+  React.useEffect(() => history.push("/"), [history]);
+  if (!isAuth) {
+    return (
+      <Switch>
+        <Route path="/login" component={Login} />
+        <Route path="/signup" component={Signup} />
+        <Redirect to="/login" />
+      </Switch>
+    );
+  }
+  if (loading) {
+    return <div> LOADING ... </div>;
+  }
+  const me: MeContentTypes | null = data ? data.user[0] : null;
+  const currentUserId = me!.id;
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <CurrentUserContext.Provider value={{ ...me, currentUserId }}>
+        <Switch>
+          <Route exact path="/" component={Dashboard} />
+          <Route path="/login" component={Login} />
+          <Route path="/signup" component={Signup} />
+          <Route path="*" componenent={ErrorPage} />
+        </Switch>
+      </CurrentUserContext.Provider>
     </div>
   );
-}
-
+};
 export default App;
