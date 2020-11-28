@@ -18,21 +18,19 @@ firebase.initializeApp({
 
 type AuthContextProps = {
   authState: AuthStateTypes;
-  signOut: any;
-  logInWithEmailAndPassword: any;
-  signUpWithEmailAndPassword: any;
+  signOut: () => Promise<void>;
+  logInWithEmailAndPassword: (
+    email: string,
+    password: string
+  ) => Promise<firebase.auth.UserCredential>;
+  signUpWithEmailAndPassword: (formData: {
+    email: string;
+    password: string;
+    username: string;
+  }) => Promise<void>;
 };
 
-const defaultValue = {
-  authState: {
-    status: "status",
-  },
-  signOut: "signOut",
-  logInWithEmailAndPassword: "pass",
-  signUpWithEmailAndPassword: "signup",
-};
-
-export const AuthContext = React.createContext<AuthContextProps>(defaultValue);
+export const AuthContext = React.createContext<AuthContextProps>(undefined!);
 
 type AuthStateTypes = {
   status: string;

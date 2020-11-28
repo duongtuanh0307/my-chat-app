@@ -1,5 +1,5 @@
 import React, { FC } from "react";
-import { Switch, Route, Redirect, useHistory } from "react-router-dom";
+import { Switch, Route, Redirect } from "react-router-dom";
 import Login from "./pages/login";
 import Dashboard from "./pages/dashboard";
 import Signup from "./pages/signup";
@@ -18,7 +18,7 @@ type MeContentTypes = {
   phone_number: string;
 };
 
-export const CurrentUserContext: any = React.createContext();
+export const CurrentUserContext: any = React.createContext(undefined!);
 
 const App: FC = () => {
   const { authState } = React.useContext(AuthContext);
@@ -27,9 +27,8 @@ const App: FC = () => {
   const { data, loading } = useSubscription(ME, {
     variables: { firebaseUserId: firebaseUserId },
   });
-  const history = useHistory();
-  React.useEffect(() => history.push("/"), [history]);
-  if (!isAuth) {
+
+  if (!isAuth && authState.status !== "loading") {
     return (
       <Switch>
         <Route path="/login" component={Login} />
@@ -38,9 +37,11 @@ const App: FC = () => {
       </Switch>
     );
   }
+
   if (loading) {
     return <div> LOADING ... </div>;
   }
+
   const me: MeContentTypes | null = data ? data.user[0] : null;
   const currentUserId = me!.id;
 
