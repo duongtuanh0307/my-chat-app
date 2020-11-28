@@ -9,7 +9,6 @@ import { H5 } from "../elements/typographies";
 import { useQuery, useSubscription, useMutation } from "@apollo/client";
 import { GET_USER_BY_ID, SEARCH_CHATBOX } from "../../graphql/queries";
 import { GET_MESSAGES_BY_CHAT_ID } from "../../graphql/subscriptions";
-// import { ADD_MESSAGE } from "../../graphql/mutations";
 import { ADD_MESSAGE, CREATE_NEW_CHATBOX } from "../../graphql/mutations";
 
 type ChatTypes = {
@@ -145,12 +144,18 @@ const UserChat: FC<{
   const [addMessage] = useMutation(ADD_MESSAGE);
   const { currentUserId, profile_image } = React.useContext(CurrentUserContext);
   const userIdArr = [currentUserId, selectedGuestId];
-  const res1 = useQuery(SEARCH_CHATBOX, {
+  const { data: data1, loading: loading1 } = useQuery(SEARCH_CHATBOX, {
     variables: { userIdArr: userIdArr },
   });
-  const data1 = res1.data;
-  const loading1 = res1.loading;
-  const [createChatbox, { data, loading }] = useMutation(CREATE_NEW_CHATBOX);
+
+  const [createChatbox] = useMutation(CREATE_NEW_CHATBOX, {
+    refetchQueries: [
+      {
+        query: SEARCH_CHATBOX,
+        variables: { userIdArr: userIdArr },
+      },
+    ],
+  });
   const [chatboxId, setChatboxId] = React.useState("");
   React.useEffect(() => {
     if (loading1) return;
@@ -158,31 +163,19 @@ const UserChat: FC<{
       createChatbox({
         variables: { user01: currentUserId, user02: selectedGuestId },
       });
-      if (loading) return;
-      setChatboxId(data.insert_chatboxes.returning.id);
       return;
+    } else {
+      setChatboxId(data1.chatboxes[0].id);
     }
-    setChatboxId(data1.chatboxes[0].id);
     return;
-  }, [
-    data1,
-    loading1,
-    data,
-    loading,
-    setChatboxId,
-    createChatbox,
-    currentUserId,
-    selectedGuestId,
-  ]);
+  }, [data1, loading1, createChatbox, currentUserId, selectedGuestId]);
+
+  console.log(chatboxId);
   const [inputMes, setInputMes] = React.useState("");
-  const res2 = useQuery(GET_USER_BY_ID, {
+  const { data: guestData, loading: loading2 } = useQuery(GET_USER_BY_ID, {
     variables: { userId: selectedGuestId },
   });
-  const [loading2, guestData] = [res2.loading, res2.data];
 
-  const res3 = useSubscription(GET_MESSAGES_BY_CHAT_ID, {
-    variables: { chatboxId: chatboxId },
-  });
   function handleAddMessage(): void {
     addMessage({
       variables: {
@@ -193,10 +186,16 @@ const UserChat: FC<{
     });
     setInputMes("");
   }
-  const loading3 = res3.loading;
+
+  const { data: chatData, loading: loading3 } = useSubscription(
+    GET_MESSAGES_BY_CHAT_ID,
+    {
+      variables: { chatboxId: chatboxId },
+    }
+  );
 
   if (loading1 || loading2 || loading3) return <div>Loading ...</div>;
-  const chats = res3.data ? res3.data.messages : [];
+  const chats = chatData ? chatData.messages : [];
 
   return (
     <UserChatWrapper>
