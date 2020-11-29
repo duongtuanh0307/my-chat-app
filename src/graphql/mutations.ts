@@ -84,3 +84,11 @@ export const UPDATE_USER_INFO = gql`
     }
   }
 `;
+
+export const DELETE_CONTACT_ITEM = gql`
+  mutation deleteContact($contactItemId: uuid!) {
+    delete_contacts_list(where: { contact_item_id: { _eq: $contactItemId } }) {
+      affected_rows
+    }
+  }
+`;

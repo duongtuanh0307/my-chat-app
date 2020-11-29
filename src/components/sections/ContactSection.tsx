@@ -8,6 +8,7 @@ import { useQuery } from "@apollo/react-hooks";
 import { GET_CONTACTS_LIST } from "../../graphql/queries";
 import { StyledButton } from "../elements/buttons";
 import AddContactModal from "./AddContactModal";
+import ConfirmDeleteModal from "./ConfirmDeleteModal";
 
 const ContactsWrapper = styled.div`
   box-sizing: border-box;
@@ -36,9 +37,9 @@ const ContactHeaderWrapper = styled.div`
   }
 `;
 
-const ContactSection: FC<{ setSelectedGuest: any }> = ({
-  setSelectedGuest,
-}) => {
+const ContactSection: FC<{
+  setSelectedGuest: React.Dispatch<React.SetStateAction<string>>;
+}> = ({ setSelectedGuest }) => {
   type ContactTypes = {
     contact_item: {
       id: string;
@@ -54,11 +55,13 @@ const ContactSection: FC<{ setSelectedGuest: any }> = ({
   });
 
   const [openAddContact, setOpenAddContact] = React.useState(false);
+  const [confirmDelete, setConfirmDelete] = React.useState(false);
+  const [targetUserId, setTargetUserId] = React.useState("");
   if (loading) return <div>Loading ....</div>;
   const contactsList = data ? data.contacts_list : [];
-  const handleOpenAddContact = function () {
+  function handleOpenAddContact() {
     setOpenAddContact(!openAddContact);
-  };
+  }
 
   return (
     <div>
@@ -75,12 +78,21 @@ const ContactSection: FC<{ setSelectedGuest: any }> = ({
               key={contact.contact_item.id}
               name={contact.contact_item.username}
               onClick={() => setSelectedGuest(contact.contact_item.id)}
+              setTargetUserId={setTargetUserId}
+              userId={contact.contact_item.id}
+              setConfirmDelete={setConfirmDelete}
             ></ContactItem>
           ))}
         </div>
       </ContactsWrapper>
       {openAddContact && (
         <AddContactModal handleOpenAddContact={handleOpenAddContact} />
+      )}
+      {confirmDelete && (
+        <ConfirmDeleteModal
+          setConfirmDelete={setConfirmDelete}
+          targetUserId={targetUserId}
+        />
       )}
     </div>
   );

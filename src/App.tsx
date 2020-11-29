@@ -18,7 +18,11 @@ type MeContentTypes = {
   phone_number: string;
 };
 
-export const CurrentUserContext: any = React.createContext(undefined!);
+type CurrentUserContextTypes = MeContentTypes & { currentUserId: string };
+
+export const CurrentUserContext = React.createContext<CurrentUserContextTypes>(
+  undefined!
+);
 
 const App: FC = () => {
   const { authState } = React.useContext(AuthContext);
@@ -42,7 +46,7 @@ const App: FC = () => {
     return <div> LOADING ... </div>;
   }
 
-  const me: MeContentTypes | null = data ? data.user[0] : null;
+  const me: MeContentTypes = data ? data?.user[0] : null;
   const currentUserId = me!.id;
 
   return (

@@ -5,7 +5,7 @@ import theme from "../../theme";
 type PropsTypes = {
   id: string;
   type: "text" | "password" | "email" | "text-field";
-  onChange?: any;
+  onChange?: (e: any) => void;
   placeholder?: string;
   label?: string;
   className?: string;

@@ -170,7 +170,6 @@ const UserChat: FC<{
     return;
   }, [data1, loading1, createChatbox, currentUserId, selectedGuestId]);
 
-  console.log(chatboxId);
   const [inputMes, setInputMes] = React.useState("");
   const { data: guestData, loading: loading2 } = useQuery(GET_USER_BY_ID, {
     variables: { userId: selectedGuestId },
