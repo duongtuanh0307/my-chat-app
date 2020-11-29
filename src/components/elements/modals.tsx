@@ -26,10 +26,21 @@ const ModalOverlay = styled.div`
   z-index: 10;
 `;
 
-const ModalContentWrapper = styled.div.attrs(
-  (props: { width?: string; height?: string }) => ({
-    width: props.width || "400px",
-    height: props.height || "600px",
+const UnstyledModalContentWrapper: FC<{
+  children: React.ReactNode;
+  className?: string;
+  width: string;
+  height: string;
+}> = ({ className, width, height, children }) => (
+  <div className={className} attr-width={width} attr-height={height}>
+    {children}
+  </div>
+);
+
+const ModalContentWrapper = styled(UnstyledModalContentWrapper).attrs(
+  (props: { width: string; height: string }) => ({
+    width: props.width,
+    height: props.height,
   })
 )`
   background-color: ${theme.colorPallet.white};
@@ -59,17 +70,17 @@ const ModalHeader = styled.div`
 
 type ModalTypes = {
   modalTitle: string;
-  onClose: any;
+  onClose: () => void;
   className?: string;
   children: React.ReactNode;
-  width?: string;
-  height?: string;
+  width: string;
+  height: string;
 };
 
 //Modal Button
 type ButtonTypes = {
   children: React.ReactNode;
-  onClick: any;
+  onClick: () => void;
   className?: string;
   disabled: boolean;
   width?: string;
@@ -156,7 +167,7 @@ export const Modal: FC<ModalTypes> = ({
   <div>
     <ModalWrapper className={className}>
       <ModalOverlay></ModalOverlay>
-      <ModalContentWrapper attr-width={width} attr-height={height}>
+      <ModalContentWrapper width={width} height={height}>
         <ModalHeader>
           <H5>{modalTitle}</H5>
           <ModalButton onClick={onClose} actionType="close" disabled={false}>

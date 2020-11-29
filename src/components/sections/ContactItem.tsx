@@ -1,8 +1,8 @@
 import React, { FC } from "react";
 import styled from "styled-components";
 import { H5 } from "../elements/typographies";
-import { ThreeDotsIcon } from "../../icons";
-import { ActionMenu, ActionMenuItem } from "../elements/others";
+import { DeleteIcon } from "../../icons";
+import { ActionButton } from "../elements/buttons";
 import theme from "../../theme";
 
 const ContactItemWrapper = styled.div`
@@ -20,47 +20,33 @@ const ContactItemWrapper = styled.div`
   }
 `;
 
-const StyledActionButton = styled.button`
-  border: none;
-  background-color: transparent;
-  &:focus {
-    outline: transparent;
-  }
-`;
-
-const ActionButton: FC<{
-  className?: string;
-  onClick?: () => void;
-  children: React.ReactNode;
-}> = ({ className, onClick, children }) => (
-  <StyledActionButton onClick={onClick} className={className}>
-    {children}
-  </StyledActionButton>
-);
-// Contact Item
 const ContactItem: FC<{
   name: string;
   className?: string;
+  userId: string;
+  setTargetUserId: React.Dispatch<React.SetStateAction<string>>;
+  setConfirmDelete: React.Dispatch<React.SetStateAction<boolean>>;
   onClick: () => void;
-}> = ({ name, className, onClick }) => {
-  const [openActionMenu, setOpenActionMenu] = React.useState(false);
-
-  function handleShowActionMenu() {
-    setOpenActionMenu(!openActionMenu);
+}> = ({
+  name,
+  className,
+  onClick,
+  setTargetUserId,
+  setConfirmDelete,
+  userId,
+}) => {
+  function handleConfirmDelete() {
+    setTargetUserId(userId);
+    setConfirmDelete(true);
   }
 
   return (
     <ContactItemWrapper className={className}>
       <H5 onClick={onClick}>{name}</H5>
       <div>
-        <ActionButton onClick={handleShowActionMenu}>
-          <ThreeDotsIcon />
+        <ActionButton onClick={handleConfirmDelete}>
+          <DeleteIcon />
         </ActionButton>
-        <ActionMenu open={openActionMenu}>
-          <ActionMenuItem>Hello</ActionMenuItem>
-          <ActionMenuItem>Hi</ActionMenuItem>
-          <ActionMenuItem>Action</ActionMenuItem>
-        </ActionMenu>
       </div>
     </ContactItemWrapper>
   );

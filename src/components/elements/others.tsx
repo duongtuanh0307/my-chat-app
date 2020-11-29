@@ -6,7 +6,7 @@ import theme from "../../theme";
 export const Form: FC<{
   children: React.ReactNode;
   className?: string;
-  onSubmit?: any;
+  onSubmit?: () => void;
 }> = ({ className, children, onSubmit }) => (
   <form className={className} onSubmit={onSubmit}>
     {children}

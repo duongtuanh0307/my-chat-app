@@ -56,9 +56,9 @@ export type ChatBoxTypes = {
   ];
 };
 
-const RecentChatsSection: FC<{ setSelectedGuest: any }> = ({
-  setSelectedGuest,
-}) => {
+const RecentChatsSection: FC<{
+  setSelectedGuest: React.Dispatch<React.SetStateAction<string>>;
+}> = ({ setSelectedGuest }) => {
   const { currentUserId } = React.useContext(CurrentUserContext);
   const { data, loading } = useSubscription(GET_MY_CHATBOXES, {
     variables: { userId: currentUserId },

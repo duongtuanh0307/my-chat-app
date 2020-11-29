@@ -19,7 +19,7 @@ const LeftSidebarWrapper = styled.div`
 
 type PropsTypes = {
   openingSection: "profile" | "chat" | "contacts" | "setting";
-  setSelectedGuest: any;
+  setSelectedGuest: React.Dispatch<React.SetStateAction<string>>;
 };
 
 const LeftSidebar: FC<PropsTypes> = ({ openingSection, setSelectedGuest }) => {

@@ -56,7 +56,28 @@ export const PrimaryButton = styled(StyledButton)`
   }
 `;
 
-export const EditButton = styled(StyledButton)`
-  color: ${theme.colorPallet.darkText};
-  background-color: ${theme.colorPallet.secondary};
+//Action Button:
+const StyledActionButton = styled.button`
+  border: none;
+  background-color: transparent;
+  z-index: 100;
+  &:hover {
+    cursor: pointer;
+  }
+  &:focus {
+    outline: transparent;
+  }
+  & > * {
+    pointer-events: none;
+  }
 `;
+
+export const ActionButton: FC<{
+  className?: string;
+  onClick?: () => void;
+  children: React.ReactNode;
+}> = ({ className, onClick, children }) => (
+  <StyledActionButton onClick={onClick} className={className}>
+    {children}
+  </StyledActionButton>
+);

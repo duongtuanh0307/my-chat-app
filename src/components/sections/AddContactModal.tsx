@@ -58,7 +58,12 @@ const AddContactModal: FC<AddContactModalTypes> = ({
   };
 
   return (
-    <Modal modalTitle="Add Contact" onClose={handleOpenAddContact}>
+    <Modal
+      width="400px"
+      height="600px"
+      modalTitle="Add Contact"
+      onClose={handleOpenAddContact}
+    >
       <InputWithPrepend
         value={inputString}
         id="search"

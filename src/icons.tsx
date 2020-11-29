@@ -8,6 +8,8 @@ import { ChatDots, ThreeDotsVertical } from "@styled-icons/bootstrap";
 import { LogoutBox } from "@styled-icons/remix-line";
 import { CloseOutline, SearchOutline } from "@styled-icons/evaicons-outline";
 import { Chat } from "@styled-icons/crypto";
+import { DeleteBin } from "@styled-icons/remix-line";
+import { Eye, EyeSlash } from "@styled-icons/bootstrap";
 
 //Default size 14px;
 export const UserIcon = styled(User).attrs((props) => ({
@@ -103,4 +105,22 @@ export const BigChatIcon = styled(Chat).attrs((props) => ({
   color: ${(props) => props.color};
   width: 120px;
   height: 120px;
+`;
+
+export const DeleteIcon = styled(DeleteBin)`
+  color: ${theme.colorPallet.danger};
+  width: 24px;
+  height: 24px;
+`;
+
+export const ViewIcon = styled(Eye)`
+  color: ${theme.colorPallet.darkText};
+  width: 24px;
+  height: 24px;
+`;
+
+export const CloseView = styled(EyeSlash)`
+  color: ${theme.colorPallet.darkText};
+  width: 24px;
+  height: 24px;
 `;

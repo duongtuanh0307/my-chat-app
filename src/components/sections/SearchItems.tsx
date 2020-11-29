@@ -14,7 +14,7 @@ type SearchResultTypes = {
   id: string;
   username: string;
   profile_image: string;
-  onClick?: any;
+  onClick?: () => void;
 };
 
 const MeButtonUnstyled: FC<{ className?: string }> = ({ className }) => (
